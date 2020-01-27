@@ -1,0 +1,13 @@
+{
+  "serverSettings": {
+    "port": 9999
+  },
+  "localRepositories": [
+    {
+      "githubRepoName": "App1",
+      "branch": "production",
+      "root": "/home/user/App1",
+      "command": "cd /home/user/App1 && npm run build && npm run restart"
+    }
+  ]
+}
