@@ -14,8 +14,12 @@ const serv = http.createServer(async (req, res) => {
   // console.log(repoData)
   // close connection
   res.end()
-  // 
-  const repoData = handleWebHook(payload);
+  //
+  try {
+    var repoData = handleWebHook(payload);
+  } catch (e) {
+    return console.error(e)
+  }
   // Check if branch name matches currently set branch name
   const [isBranchNameCorrect, currBranchName] = await isCorrectBranch(repoData);
   if (!isBranchNameCorrect) {
@@ -44,10 +48,11 @@ function handleWebHook(payload) {
   const { ref: branchName } = payload;
   const { name: repositoryName, ssh_url: sshURL } = payload.repository;
 
+  if (!branchName || !repositoryName || !sshURL) throw new Error('Unexpected structure of payload from webhook. ignoring.')
   // Find localRepository
   const localRepoData = config.localRepositories.find(({githubRepoName, branch}) => repositoryName === githubRepoName && branchName.endsWith(branch))
   // Push was made to none of our configured repos
-  if (!localRepoData) return console.log(`Unknown repo ${repositoryName}. ignoring.`)
+  if (!localRepoData) throw new Error(`Unknown repo ${repositoryName}. ignoring.`)
 
   return {...localRepoData, sshURL};
 }
