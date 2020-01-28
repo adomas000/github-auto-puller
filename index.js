@@ -23,7 +23,7 @@ const serv = http.createServer(async (req, res) => {
   // Check if branch name matches currently set branch name
   const [isBranchNameCorrect, currBranchName] = await isCorrectBranch(repoData);
   if (!isBranchNameCorrect) {
-    return console.error(`Incorrect branch is set for repo ${repoData.githubRepoName}. Expected: ${repoData.branch}, Received: ${currBranchName}`)
+    return console.error(`Ignoring push for ${repoData.githubRepoName} (branch name doesn't match). Expected: ${repoData.branch}, Received: ${currBranchName}`)
   }
   // Pull changes
   await pullNewestChanges(repoData)
