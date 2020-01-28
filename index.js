@@ -58,7 +58,8 @@ function handleWebHook(payload) {
 }
 
 async function pullNewestChanges (repoData) {
-  const command = `cd ${repoData.root} && git pull ${repoData.sshURL} ${repoData.branch}`
+  const pullAsNonRoot = config.serverSettings.user ? "sudo -u " + config.serverSettings.user : ""
+  const command = `cd ${repoData.root} && ${pullAsNonRoot} git pull ${repoData.sshURL} ${repoData.branch}`
   const { stdout, stderr } = await exec(command);
   console.log('Pull new changes')
   console.log('stdout:', stdout);
